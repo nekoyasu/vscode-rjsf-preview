@@ -87,6 +87,13 @@ describe('App', () => {
     expect(screen.getByText(/Waiting for schema/)).toBeInTheDocument();
   });
 
+  test('uses __DEFAULT_THEME__ as initial theme', () => {
+    (window as any).__DEFAULT_THEME__ = 'bootstrap';
+    render(<App />);
+    expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('bootstrap');
+    (window as any).__DEFAULT_THEME__ = 'default';
+  });
+
   test('shows error when error message received', async () => {
     render(<App />);
     await act(async () => {

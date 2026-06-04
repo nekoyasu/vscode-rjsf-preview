@@ -15,7 +15,7 @@ type Message =
   | { type: 'schema'; schema: RJSFSchema; fileName: string }
   | { type: 'error'; message: string };
 
-declare const window: Window & { __BOOTSTRAP_CSS__: string };
+declare const window: Window & { __BOOTSTRAP_CSS__: string; __DEFAULT_THEME__: Theme };
 
 const useThemeStylesheet = (theme: Theme) => {
   useEffect(() => {
@@ -39,7 +39,7 @@ export const App = () => {
   const [fileName, setFileName] = useState('');
   const [formData, setFormData] = useState<unknown>({});
   const [error, setError] = useState<string | null>(null);
-  const [theme, setTheme] = useState<Theme>('default');
+  const [theme, setTheme] = useState<Theme>(window.__DEFAULT_THEME__ ?? 'default');
 
   useThemeStylesheet(theme);
 

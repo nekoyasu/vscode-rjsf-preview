@@ -50,7 +50,10 @@ export const activate = (context: vscode.ExtensionContext) => {
       panel.reveal(vscode.ViewColumn.Two, true);
     }
 
-    panel.webview.html = buildHtml(panel.webview, context.extensionUri);
+    const defaultTheme = vscode.workspace
+      .getConfiguration('rjsf-preview')
+      .get<string>('defaultTheme', 'default');
+    panel.webview.html = buildHtml(panel.webview, context.extensionUri, defaultTheme);
   };
 
   context.subscriptions.push(
@@ -83,7 +86,11 @@ export const getNonce = (): string => {
   return Array.from({ length: 32 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 };
 
-const buildHtml = (webview: vscode.Webview, extensionUri: vscode.Uri): string => {
+const buildHtml = (
+  webview: vscode.Webview,
+  extensionUri: vscode.Uri,
+  defaultTheme: string
+): string => {
   const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview.js'));
   const bootstrapCssUri = webview
     .asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'bootstrap.css'))
@@ -172,7 +179,7 @@ const buildHtml = (webview: vscode.Webview, extensionUri: vscode.Uri): string =>
   </style>
 </head>
 <body>
-  <script nonce="${nonce}">window.__BOOTSTRAP_CSS__ = '${bootstrapCssUri}';</script>
+  <script nonce="${nonce}">window.__BOOTSTRAP_CSS__ = '${bootstrapCssUri}'; window.__DEFAULT_THEME__ = '${defaultTheme}';</script>
   <div id="root"><h2>Waiting for schema…</h2></div>
   <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>

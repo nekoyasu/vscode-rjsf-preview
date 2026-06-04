@@ -30,6 +30,23 @@
           "group": "navigation"
         }
       ]
+    },
+    "configuration": {
+      "title": "RJSF Schema Preview",
+      "properties": {
+        "rjsf-preview.defaultTheme": {
+          "type": "string",
+          "enum": ["default", "bootstrap", "fluent-light", "fluent-dark"],
+          "enumDescriptions": [
+            "Default RJSF theme",
+            "Bootstrap 4",
+            "Fluent UI (Light)",
+            "Fluent UI (Dark)"
+          ],
+          "default": "default",
+          "description": "Default UI theme for the form preview"
+        }
+      }
     }
   },
   "scripts": {

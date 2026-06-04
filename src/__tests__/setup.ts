@@ -4,6 +4,7 @@ if (typeof document !== 'undefined') {
   link.id = 'theme-stylesheet';
   document.head.appendChild(link);
   (window as any).__BOOTSTRAP_CSS__ = '';
+  (window as any).__DEFAULT_THEME__ = 'default';
 }
 
 (globalThis as any).acquireVsCodeApi = () => ({ postMessage: jest.fn() });
