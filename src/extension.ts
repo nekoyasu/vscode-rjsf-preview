@@ -69,11 +69,11 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
-function isSchemaFile(fileName: string): boolean {
+export function isSchemaFile(fileName: string): boolean {
   return /schema.*\.json$|.*schema\.json$/i.test(fileName);
 }
 
-function getNonce(): string {
+export function getNonce(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   return Array.from({ length: 32 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 }
