@@ -1,0 +1,66 @@
+{
+  "name": "rjsf-preview",
+  "displayName": "RJSF Schema Preview",
+  "description": "Preview JSON Schema as a React form using react-jsonschema-form",
+  "version": "0.1.0",
+  "publisher": "local",
+  "license": "MIT",
+  "author": "nekoyasu@gmail.com",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "rjsf-preview.showPreview",
+        "title": "Open RJSF Form Preview",
+        "icon": "$(open-preview)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "rjsf-preview.showPreview",
+          "when": "resourceFilename =~ /schema.*\\.json$/ || resourceFilename =~ /.*schema\\.json$/",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "npm run build:ext && npm run build:webview && npm run build:css",
+    "build:ext": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --platform=node --format=cjs --sourcemap",
+    "build:webview": "esbuild src/webview/index.tsx --bundle --outfile=dist/webview.js --platform=browser --format=iife --sourcemap",
+    "build:css": "cp node_modules/bootstrap/dist/css/bootstrap.min.css dist/bootstrap.css",
+    "watch": "concurrently \"npm run watch:ext\" \"npm run watch:webview\"",
+    "watch:ext": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --platform=node --format=cjs --watch",
+    "watch:webview": "esbuild src/webview/index.tsx --bundle --outfile=dist/webview.js --platform=browser --format=iife --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/vscode": "^1.85.0",
+    "concurrently": "^8.0.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@fluentui/react-components": "^9.74.1",
+    "@rjsf/bootstrap-4": "^5.24.13",
+    "@rjsf/core": "^5.24.13",
+    "@rjsf/fluentui-rc": "^5.24.13",
+    "@rjsf/utils": "^5.24.13",
+    "@rjsf/validator-ajv8": "^5.24.13",
+    "bootstrap": "^4.6.2",
+    "react": "^18.0.0",
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "^18.0.0"
+  }
+}

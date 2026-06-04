@@ -1,0 +1,7 @@
+**/.git/**
+**/node_modules/**
+src/**
+out/**
+.gitignore
+tsconfig.json
+esbuild.mjs
