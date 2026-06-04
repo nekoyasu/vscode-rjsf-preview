@@ -41,7 +41,9 @@
     "watch": "concurrently \"npm run watch:ext\" \"npm run watch:webview\"",
     "watch:ext": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --platform=node --format=cjs --watch",
     "watch:webview": "esbuild src/webview/index.tsx --bundle --outfile=dist/webview.js --platform=browser --format=iife --watch",
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\""
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
@@ -55,6 +57,7 @@
     "esbuild": "^0.20.0",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
+    "prettier": "^3.8.3",
     "ts-jest": "^29.4.11",
     "typescript": "^5.0.0"
   },
