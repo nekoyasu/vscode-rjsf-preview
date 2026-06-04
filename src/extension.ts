@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export function activate(context: vscode.ExtensionContext) {
+export const activate = (context: vscode.ExtensionContext) => {
   let panel: vscode.WebviewPanel | undefined;
   let watchedDoc: vscode.TextDocument | undefined;
 
@@ -31,7 +31,13 @@ export function activate(context: vscode.ExtensionContext) {
         }
       );
 
-      panel.onDidDispose(() => { panel = undefined; }, null, context.subscriptions);
+      panel.onDidDispose(
+        () => {
+          panel = undefined;
+        },
+        null,
+        context.subscriptions
+      );
 
       panel.webview.onDidReceiveMessage(
         (msg) => {
@@ -67,20 +73,21 @@ export function activate(context: vscode.ExtensionContext) {
       }
     })
   );
-}
+};
 
-export function isSchemaFile(fileName: string): boolean {
-  return /schema.*\.json$|.*schema\.json$/i.test(fileName);
-}
+export const isSchemaFile = (fileName: string): boolean =>
+  /schema.*\.json$|.*schema\.json$/i.test(fileName);
 
-export function getNonce(): string {
+export const getNonce = (): string => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   return Array.from({ length: 32 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-}
+};
 
-function buildHtml(webview: vscode.Webview, extensionUri: vscode.Uri): string {
+const buildHtml = (webview: vscode.Webview, extensionUri: vscode.Uri): string => {
   const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview.js'));
-  const bootstrapCssUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'bootstrap.css')).toString();
+  const bootstrapCssUri = webview
+    .asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'bootstrap.css'))
+    .toString();
   const nonce = getNonce();
   return /* html */ `<!DOCTYPE html>
 <html lang="en">
@@ -170,6 +177,6 @@ function buildHtml(webview: vscode.Webview, extensionUri: vscode.Uri): string {
   <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>
 </html>`;
-}
+};
 
-export function deactivate() {}
+export const deactivate = () => {};

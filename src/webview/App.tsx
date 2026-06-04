@@ -17,14 +17,14 @@ type Message =
 
 declare const window: Window & { __BOOTSTRAP_CSS__: string };
 
-function useThemeStylesheet(theme: Theme) {
+const useThemeStylesheet = (theme: Theme) => {
   useEffect(() => {
     const link = document.getElementById('theme-stylesheet') as HTMLLinkElement;
     link.href = theme === 'bootstrap' ? window.__BOOTSTRAP_CSS__ : '';
   }, [theme]);
-}
+};
 
-export function FormWrapper({ theme, children }: { theme: Theme; children: React.ReactNode }) {
+export const FormWrapper = ({ theme, children }: { theme: Theme; children: React.ReactNode }) => {
   if (theme === 'fluent-light') {
     return <FluentProvider theme={webLightTheme}>{children}</FluentProvider>;
   }
@@ -32,9 +32,9 @@ export function FormWrapper({ theme, children }: { theme: Theme; children: React
     return <FluentProvider theme={webDarkTheme}>{children}</FluentProvider>;
   }
   return <>{children}</>;
-}
+};
 
-export function App() {
+export const App = () => {
   const [schema, setSchema] = useState<RJSFSchema | null>(null);
   const [fileName, setFileName] = useState('');
   const [formData, setFormData] = useState<unknown>({});
@@ -61,16 +61,21 @@ export function App() {
   }, []);
 
   const FormComponent =
-    theme === 'bootstrap' ? BootstrapForm :
-    theme === 'fluent-light' || theme === 'fluent-dark' ? FluentForm :
-    DefaultForm;
+    theme === 'bootstrap'
+      ? BootstrapForm
+      : theme === 'fluent-light' || theme === 'fluent-dark'
+        ? FluentForm
+        : DefaultForm;
 
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
         {fileName && <h2 style={{ margin: 0 }}>{fileName}</h2>}
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <label htmlFor="theme-select" style={{ margin: 0, fontWeight: 'normal', opacity: 0.7, fontSize: '0.85em' }}>
+          <label
+            htmlFor="theme-select"
+            style={{ margin: 0, fontWeight: 'normal', opacity: 0.7, fontSize: '0.85em' }}
+          >
             Theme:
           </label>
           <select
@@ -87,7 +92,11 @@ export function App() {
         </div>
       </div>
 
-      {error && <div className="error"><strong>Parse error:</strong> {error}</div>}
+      {error && (
+        <div className="error">
+          <strong>Parse error:</strong> {error}
+        </div>
+      )}
       {!schema && !error && <p style={{ opacity: 0.5 }}>Waiting for schema…</p>}
 
       {schema && (
@@ -106,4 +115,4 @@ export function App() {
       )}
     </>
   );
-}
+};
