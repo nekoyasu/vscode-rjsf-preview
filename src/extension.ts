@@ -92,9 +92,6 @@ const buildHtml = (
   defaultTheme: string
 ): string => {
   const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview.js'));
-  const bootstrapCssUri = webview
-    .asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'bootstrap.css'))
-    .toString();
   const nonce = getNonce();
   return /* html */ `<!DOCTYPE html>
 <html lang="en">
@@ -104,7 +101,6 @@ const buildHtml = (
   <meta http-equiv="Content-Security-Policy"
     content="default-src 'none'; script-src 'nonce-${nonce}'; style-src 'unsafe-inline' ${webview.cspSource};">
   <title>RJSF Preview</title>
-  <link id="theme-stylesheet" rel="stylesheet" href="">
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     body {
@@ -179,7 +175,7 @@ const buildHtml = (
   </style>
 </head>
 <body>
-  <script nonce="${nonce}">window.__BOOTSTRAP_CSS__ = '${bootstrapCssUri}'; window.__DEFAULT_THEME__ = '${defaultTheme}';</script>
+  <script nonce="${nonce}">window.__DEFAULT_THEME__ = '${defaultTheme}';</script>
   <div id="root"><h2>Waiting for schema…</h2></div>
   <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>

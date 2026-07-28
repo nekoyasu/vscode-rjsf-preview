@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import DefaultForm from '@rjsf/core';
-import BootstrapForm from '@rjsf/bootstrap-4';
 import FluentForm from '@rjsf/fluentui-rc';
 import { FluentProvider, webLightTheme, webDarkTheme } from '@fluentui/react-components';
 import validator from '@rjsf/validator-ajv8';
@@ -9,20 +8,13 @@ import type { RJSFSchema } from '@rjsf/utils';
 declare function acquireVsCodeApi(): { postMessage(msg: unknown): void };
 const vscode = acquireVsCodeApi();
 
-export type Theme = 'default' | 'bootstrap' | 'fluent-light' | 'fluent-dark';
+export type Theme = 'default' | 'fluent-light' | 'fluent-dark';
 
 type Message =
   | { type: 'schema'; schema: RJSFSchema; fileName: string }
   | { type: 'error'; message: string };
 
-declare const window: Window & { __BOOTSTRAP_CSS__: string; __DEFAULT_THEME__: Theme };
-
-const useThemeStylesheet = (theme: Theme) => {
-  useEffect(() => {
-    const link = document.getElementById('theme-stylesheet') as HTMLLinkElement;
-    link.href = theme === 'bootstrap' ? window.__BOOTSTRAP_CSS__ : '';
-  }, [theme]);
-};
+declare const window: Window & { __DEFAULT_THEME__: Theme };
 
 export const FormWrapper = ({ theme, children }: { theme: Theme; children: React.ReactNode }) => {
   if (theme === 'fluent-light') {
@@ -40,8 +32,6 @@ export const App = () => {
   const [formData, setFormData] = useState<unknown>({});
   const [error, setError] = useState<string | null>(null);
   const [theme, setTheme] = useState<Theme>(window.__DEFAULT_THEME__ ?? 'default');
-
-  useThemeStylesheet(theme);
 
   useEffect(() => {
     const handler = (event: MessageEvent<Message>) => {
@@ -61,11 +51,7 @@ export const App = () => {
   }, []);
 
   const FormComponent =
-    theme === 'bootstrap'
-      ? BootstrapForm
-      : theme === 'fluent-light' || theme === 'fluent-dark'
-        ? FluentForm
-        : DefaultForm;
+    theme === 'fluent-light' || theme === 'fluent-dark' ? FluentForm : DefaultForm;
 
   return (
     <>
@@ -85,7 +71,6 @@ export const App = () => {
             style={{ width: 'auto' }}
           >
             <option value="default">Default</option>
-            <option value="bootstrap">Bootstrap 4</option>
             <option value="fluent-light">Fluent UI (Light)</option>
             <option value="fluent-dark">Fluent UI (Dark)</option>
           </select>

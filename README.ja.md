@@ -5,7 +5,7 @@ JSON Schema をインタラクティブな React フォームとしてプレビ�
 ## 機能
 
 - JSON Schema をリアルタイムでフォームとしてプレビュー（編集と同時に更新）
-- 複数の UI テーマに対応：Default / Bootstrap 4 / Fluent UI（ライト / ダーク）
+- 複数の UI テーマに対応：Default / Fluent UI（ライト / ダーク）
 - 送信したフォームデータを JSON で表示
 
 <!-- TODO: スクリーンショットを追加 -->

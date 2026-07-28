@@ -5,7 +5,7 @@ A VS Code extension that previews JSON Schema as an interactive React form using
 ## Features
 
 - Live preview of JSON Schema as a form — updates as you type
-- Multiple UI themes: Default, Bootstrap 4, Fluent UI (Light / Dark)
+- Multiple UI themes: Default, Fluent UI (Light / Dark)
 - Displays submitted form data as JSON
 
 <!-- TODO: Add screenshot here -->

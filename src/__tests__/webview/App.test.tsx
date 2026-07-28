@@ -11,13 +11,6 @@ jest.mock('@rjsf/core', () => {
     default: () => R.createElement('div', { 'data-testid': 'form-default' }),
   };
 });
-jest.mock('@rjsf/bootstrap-4', () => {
-  const R = require('react');
-  return {
-    __esModule: true,
-    default: () => R.createElement('div', { 'data-testid': 'form-bootstrap' }),
-  };
-});
 jest.mock('@rjsf/fluentui-rc', () => {
   const R = require('react');
   return {
@@ -43,16 +36,6 @@ describe('FormWrapper', () => {
   test('renders children without FluentProvider for default theme', () => {
     render(
       <FormWrapper theme="default">
-        <span data-testid="child" />
-      </FormWrapper>
-    );
-    expect(screen.getByTestId('child')).toBeInTheDocument();
-    expect(screen.queryByTestId('fluent-provider')).toBeNull();
-  });
-
-  test('renders children without FluentProvider for bootstrap theme', () => {
-    render(
-      <FormWrapper theme="bootstrap">
         <span data-testid="child" />
       </FormWrapper>
     );
@@ -88,9 +71,9 @@ describe('App', () => {
   });
 
   test('uses __DEFAULT_THEME__ as initial theme', () => {
-    (window as any).__DEFAULT_THEME__ = 'bootstrap';
+    (window as any).__DEFAULT_THEME__ = 'fluent-light';
     render(<App />);
-    expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('bootstrap');
+    expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('fluent-light');
     (window as any).__DEFAULT_THEME__ = 'default';
   });
 
