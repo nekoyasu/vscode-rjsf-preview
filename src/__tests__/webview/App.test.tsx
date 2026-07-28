@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 
 jest.mock('@rjsf/core', () => {
   const R = require('react');
@@ -104,6 +104,31 @@ describe('App', () => {
     });
     expect(screen.getByTestId('form-default')).toBeInTheDocument();
     expect(screen.getByText('user.schema.json')).toBeInTheDocument();
+  });
+
+  test('scopes the default theme form with the rjsf-form class', async () => {
+    render(<App />);
+    await act(async () => {
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          data: { type: 'schema', schema: { type: 'object' }, fileName: 'schema.json' },
+        })
+      );
+    });
+    expect(screen.getByTestId('form-default').parentElement).toHaveClass('rjsf-form');
+  });
+
+  test('does not scope the fluent theme form with the rjsf-form class', async () => {
+    render(<App />);
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'fluent-light' } });
+    await act(async () => {
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          data: { type: 'schema', schema: { type: 'object' }, fileName: 'schema.json' },
+        })
+      );
+    });
+    expect(screen.getByTestId('form-fluent').parentElement).not.toHaveClass('rjsf-form');
   });
 
   test('clears error when valid schema received after error', async () => {

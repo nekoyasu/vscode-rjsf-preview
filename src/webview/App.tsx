@@ -18,10 +18,18 @@ declare const window: Window & { __DEFAULT_THEME__: Theme };
 
 export const FormWrapper = ({ theme, children }: { theme: Theme; children: React.ReactNode }) => {
   if (theme === 'fluent-light') {
-    return <FluentProvider theme={webLightTheme}>{children}</FluentProvider>;
+    return (
+      <FluentProvider theme={webLightTheme} style={{ padding: 16 }}>
+        {children}
+      </FluentProvider>
+    );
   }
   if (theme === 'fluent-dark') {
-    return <FluentProvider theme={webDarkTheme}>{children}</FluentProvider>;
+    return (
+      <FluentProvider theme={webDarkTheme} style={{ padding: 16 }}>
+        {children}
+      </FluentProvider>
+    );
   }
   return <>{children}</>;
 };
@@ -86,15 +94,17 @@ export const App = () => {
 
       {schema && (
         <FormWrapper theme={theme}>
-          <FormComponent
-            schema={schema}
-            validator={validator}
-            formData={formData}
-            onChange={({ formData: d }) => setFormData(d)}
-            onSubmit={({ formData: d }) => {
-              vscode.postMessage({ type: 'submit', data: d });
-            }}
-          />
+          <div className={theme === 'default' ? 'rjsf-form' : undefined}>
+            <FormComponent
+              schema={schema}
+              validator={validator}
+              formData={formData}
+              onChange={({ formData: d }) => setFormData(d)}
+              onSubmit={({ formData: d }) => {
+                vscode.postMessage({ type: 'submit', data: d });
+              }}
+            />
+          </div>
           <div id="form-data-preview">{JSON.stringify(formData, null, 2)}</div>
         </FormWrapper>
       )}

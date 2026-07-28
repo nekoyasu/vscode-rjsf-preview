@@ -118,11 +118,12 @@ const buildHtml = (
       border: 1px solid var(--vscode-inputValidation-errorBorder);
       padding: 8px 12px; border-radius: 4px; margin-bottom: 12px;
     }
-    label { display: block; margin-bottom: 4px; font-weight: 600; }
-    .field-description { font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; }
-    .form-group { margin-bottom: 14px; }
-    input[type="text"], input[type="number"], input[type="email"],
-    input[type="url"], input[type="password"], select, textarea {
+    select { background: var(--vscode-input-background); color: var(--vscode-input-foreground); }
+    .rjsf-form label { display: block; margin-bottom: 4px; font-weight: 600; }
+    .rjsf-form .field-description { font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; }
+    .rjsf-form .form-group { margin-bottom: 14px; }
+    .rjsf-form input[type="text"], .rjsf-form input[type="number"], .rjsf-form input[type="email"],
+    .rjsf-form input[type="url"], .rjsf-form input[type="password"], .rjsf-form select, .rjsf-form textarea {
       background: var(--vscode-input-background);
       color: var(--vscode-input-foreground);
       border: 1px solid var(--vscode-input-border, #555);
@@ -132,15 +133,15 @@ const buildHtml = (
       font-family: inherit;
       font-size: inherit;
     }
-    input[type="checkbox"] { margin-right: 6px; }
-    fieldset {
+    .rjsf-form input[type="checkbox"] { margin-right: 6px; }
+    .rjsf-form fieldset {
       border: 1px solid var(--vscode-panel-border, #444);
       padding: 12px 16px;
       margin-bottom: 14px;
       border-radius: 3px;
     }
-    legend { padding: 0 6px; font-weight: 600; }
-    button[type="submit"] {
+    .rjsf-form legend { padding: 0 6px; font-weight: 600; }
+    .rjsf-form button[type="submit"] {
       background: var(--vscode-button-background);
       color: var(--vscode-button-foreground);
       border: none;
@@ -150,10 +151,10 @@ const buildHtml = (
       font-size: inherit;
       margin-top: 8px;
     }
-    button[type="submit"]:hover { background: var(--vscode-button-hoverBackground); }
-    .array-item { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; }
-    .array-item > div { flex: 1; }
-    .array-item-toolbar button {
+    .rjsf-form button[type="submit"]:hover { background: var(--vscode-button-hoverBackground); }
+    .rjsf-form .array-item { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; }
+    .rjsf-form .array-item > div { flex: 1; }
+    .rjsf-form .array-item-toolbar button {
       background: transparent;
       color: var(--vscode-editor-foreground);
       border: 1px solid var(--vscode-panel-border, #444);
@@ -165,8 +166,9 @@ const buildHtml = (
     #form-data-preview {
       margin-top: 24px;
       padding: 12px;
-      background: var(--vscode-textBlockQuote-background);
-      border-left: 3px solid var(--vscode-activityBarBadge-background);
+      background: var(--colorNeutralBackground3, var(--vscode-textBlockQuote-background));
+      color: var(--colorNeutralForeground1, var(--vscode-editor-foreground));
+      border-left: 3px solid var(--colorBrandStroke1, var(--vscode-activityBarBadge-background));
       font-family: var(--vscode-editor-font-family, monospace);
       font-size: 0.85em;
       white-space: pre-wrap;
