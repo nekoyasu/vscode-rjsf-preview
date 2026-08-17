@@ -1,24 +1,61 @@
+import * as path from 'path';
 import * as vscode from 'vscode';
 
 export const activate = (context: vscode.ExtensionContext) => {
   let panel: vscode.WebviewPanel | undefined;
   let watchedDoc: vscode.TextDocument | undefined;
+  let watchedUiSchemaDoc: vscode.TextDocument | undefined;
+  let manualUiSchemaUri: vscode.Uri | undefined;
 
-  const sendSchema = (doc: vscode.TextDocument) => {
+  const resolveUiSchemaDoc = async (
+    doc: vscode.TextDocument
+  ): Promise<vscode.TextDocument | undefined> => {
+    const candidateUri =
+      manualUiSchemaUri ??
+      (() => {
+        const candidateName = resolveUiSchemaFileName(path.basename(doc.uri.fsPath));
+        return candidateName ? vscode.Uri.joinPath(doc.uri, '..', candidateName) : undefined;
+      })();
+    if (!candidateUri) return undefined;
+    try {
+      return await vscode.workspace.openTextDocument(candidateUri);
+    } catch {
+      return undefined;
+    }
+  };
+
+  const sendSchema = async (doc: vscode.TextDocument) => {
     if (!panel) return;
     try {
       const schema = JSON.parse(doc.getText());
-      panel.webview.postMessage({ type: 'schema', schema, fileName: doc.fileName });
+      const uiSchemaDoc = await resolveUiSchemaDoc(doc);
+      watchedUiSchemaDoc = uiSchemaDoc;
+
+      let uiSchema: unknown;
+      if (uiSchemaDoc) {
+        try {
+          uiSchema = JSON.parse(uiSchemaDoc.getText());
+        } catch (e) {
+          vscode.window.showWarningMessage(`Invalid UI Schema JSON: ${String(e)}`);
+        }
+      }
+
+      panel.webview.postMessage({ type: 'schema', schema, uiSchema, fileName: doc.fileName });
     } catch (e) {
       panel.webview.postMessage({ type: 'error', message: String(e) });
     }
+  };
+
+  const switchWatchedDoc = (doc: vscode.TextDocument) => {
+    if (watchedDoc !== doc) manualUiSchemaUri = undefined;
+    watchedDoc = doc;
   };
 
   const showPreview = () => {
     const editor = vscode.window.activeTextEditor;
     if (!editor) return;
 
-    watchedDoc = editor.document;
+    switchWatchedDoc(editor.document);
 
     if (!panel) {
       panel = vscode.window.createWebviewPanel(
@@ -61,9 +98,36 @@ export const activate = (context: vscode.ExtensionContext) => {
   );
 
   context.subscriptions.push(
+    vscode.commands.registerCommand('rjsf-preview.openUiSchema', async () => {
+      if (!watchedDoc) {
+        vscode.window.showInformationMessage('Open a schema preview first.');
+        return;
+      }
+      const picked = await vscode.window.showOpenDialog({
+        canSelectMany: false,
+        filters: { JSON: ['json'] },
+      });
+      if (!picked || picked.length === 0) return;
+      manualUiSchemaUri = picked[0];
+      sendSchema(watchedDoc);
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('rjsf-preview.clearUiSchema', () => {
+      if (!watchedDoc) {
+        vscode.window.showInformationMessage('Open a schema preview first.');
+        return;
+      }
+      manualUiSchemaUri = undefined;
+      sendSchema(watchedDoc);
+    })
+  );
+
+  context.subscriptions.push(
     vscode.workspace.onDidChangeTextDocument((e) => {
-      if (panel && watchedDoc && e.document === watchedDoc) {
-        sendSchema(e.document);
+      if (panel && watchedDoc && (e.document === watchedDoc || e.document === watchedUiSchemaDoc)) {
+        sendSchema(watchedDoc);
       }
     })
   );
@@ -71,7 +135,7 @@ export const activate = (context: vscode.ExtensionContext) => {
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor && panel && isSchemaFile(editor.document.fileName)) {
-        watchedDoc = editor.document;
+        switchWatchedDoc(editor.document);
         sendSchema(editor.document);
       }
     })
@@ -80,6 +144,18 @@ export const activate = (context: vscode.ExtensionContext) => {
 
 export const isSchemaFile = (fileName: string): boolean =>
   /schema.*\.json$|.*schema\.json$/i.test(fileName);
+
+const UI_SCHEMA_SUFFIXES = ['.jsonschema.json', '.schema.json'];
+
+export const resolveUiSchemaFileName = (schemaFileName: string): string | undefined => {
+  const lower = schemaFileName.toLowerCase();
+  for (const suffix of UI_SCHEMA_SUFFIXES) {
+    if (lower.endsWith(suffix)) {
+      return `${schemaFileName.slice(0, schemaFileName.length - suffix.length)}.uischema.json`;
+    }
+  }
+  return undefined;
+};
 
 export const getNonce = (): string => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

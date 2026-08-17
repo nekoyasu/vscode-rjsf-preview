@@ -20,6 +20,14 @@
         "command": "rjsf-preview.showPreview",
         "title": "Open RJSF Form Preview",
         "icon": "$(open-preview)"
+      },
+      {
+        "command": "rjsf-preview.openUiSchema",
+        "title": "Open UI Schema"
+      },
+      {
+        "command": "rjsf-preview.clearUiSchema",
+        "title": "Reset UI Schema (Auto-detect)"
       }
     ],
     "menus": {

@@ -8,7 +8,11 @@ jest.mock('@rjsf/core', () => {
   const R = require('react');
   return {
     __esModule: true,
-    default: () => R.createElement('div', { 'data-testid': 'form-default' }),
+    default: ({ uiSchema }: any) =>
+      R.createElement('div', {
+        'data-testid': 'form-default',
+        'data-ui-schema': uiSchema ? JSON.stringify(uiSchema) : '',
+      }),
   };
 });
 jest.mock('@rjsf/fluentui-rc', () => {
@@ -129,6 +133,44 @@ describe('App', () => {
       );
     });
     expect(screen.getByTestId('form-fluent').parentElement).not.toHaveClass('rjsf-form');
+  });
+
+  test('passes uiSchema to the form and shows the UI Schema indicator', async () => {
+    render(<App />);
+    await act(async () => {
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          data: {
+            type: 'schema',
+            schema: { type: 'object' },
+            uiSchema: { 'ui:order': ['name'] },
+            fileName: '/workspace/user.schema.json',
+          },
+        })
+      );
+    });
+    expect(screen.getByText('+ UI Schema')).toBeInTheDocument();
+    expect(screen.getByTestId('form-default')).toHaveAttribute(
+      'data-ui-schema',
+      JSON.stringify({ 'ui:order': ['name'] })
+    );
+  });
+
+  test('omits the UI Schema indicator when no uiSchema is provided', async () => {
+    render(<App />);
+    await act(async () => {
+      window.dispatchEvent(
+        new MessageEvent('message', {
+          data: {
+            type: 'schema',
+            schema: { type: 'object' },
+            fileName: '/workspace/user.schema.json',
+          },
+        })
+      );
+    });
+    expect(screen.queryByText('+ UI Schema')).toBeNull();
+    expect(screen.getByTestId('form-default')).toHaveAttribute('data-ui-schema', '');
   });
 
   test('clears error when valid schema received after error', async () => {

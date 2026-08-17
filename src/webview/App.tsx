@@ -3,7 +3,7 @@ import DefaultForm from '@rjsf/core';
 import FluentForm from '@rjsf/fluentui-rc';
 import { FluentProvider, webLightTheme, webDarkTheme } from '@fluentui/react-components';
 import validator from '@rjsf/validator-ajv8';
-import type { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 
 declare function acquireVsCodeApi(): { postMessage(msg: unknown): void };
 const vscode = acquireVsCodeApi();
@@ -11,7 +11,7 @@ const vscode = acquireVsCodeApi();
 export type Theme = 'default' | 'fluent-light' | 'fluent-dark';
 
 type Message =
-  | { type: 'schema'; schema: RJSFSchema; fileName: string }
+  | { type: 'schema'; schema: RJSFSchema; uiSchema?: UiSchema; fileName: string }
   | { type: 'error'; message: string };
 
 declare const window: Window & { __DEFAULT_THEME__: Theme };
@@ -36,6 +36,7 @@ export const FormWrapper = ({ theme, children }: { theme: Theme; children: React
 
 export const App = () => {
   const [schema, setSchema] = useState<RJSFSchema | null>(null);
+  const [uiSchema, setUiSchema] = useState<UiSchema | undefined>(undefined);
   const [fileName, setFileName] = useState('');
   const [formData, setFormData] = useState<unknown>({});
   const [error, setError] = useState<string | null>(null);
@@ -46,6 +47,7 @@ export const App = () => {
       const msg = event.data;
       if (msg.type === 'schema') {
         setSchema(msg.schema);
+        setUiSchema(msg.uiSchema);
         setFileName(msg.fileName.split('/').pop() ?? '');
         setFormData({});
         setError(null);
@@ -64,7 +66,18 @@ export const App = () => {
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-        {fileName && <h2 style={{ margin: 0 }}>{fileName}</h2>}
+        {fileName && (
+          <h2 style={{ margin: 0 }}>
+            {fileName}
+            {uiSchema && (
+              <span
+                style={{ fontSize: '0.7em', fontWeight: 'normal', opacity: 0.6, marginLeft: 8 }}
+              >
+                + UI Schema
+              </span>
+            )}
+          </h2>
+        )}
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
           <label
             htmlFor="theme-select"
@@ -97,6 +110,7 @@ export const App = () => {
           <div className={theme === 'default' ? 'rjsf-form' : undefined}>
             <FormComponent
               schema={schema}
+              uiSchema={uiSchema}
               validator={validator}
               formData={formData}
               onChange={({ formData: d }) => setFormData(d)}

@@ -1,4 +1,4 @@
-import { isSchemaFile, getNonce } from '../extension';
+import { isSchemaFile, getNonce, resolveUiSchemaFileName } from '../extension';
 
 describe('isSchemaFile', () => {
   test.each([
@@ -14,6 +14,20 @@ describe('isSchemaFile', () => {
     ['', false],
   ])('isSchemaFile(%s) === %s', (filename, expected) => {
     expect(isSchemaFile(filename)).toBe(expected);
+  });
+});
+
+describe('resolveUiSchemaFileName', () => {
+  test.each([
+    ['user.schema.json', 'user.uischema.json'],
+    ['user.jsonschema.json', 'user.uischema.json'],
+    ['User.SCHEMA.JSON', 'User.uischema.json'],
+    ['nested.name.schema.json', 'nested.name.uischema.json'],
+    ['schemaFoo.json', undefined],
+    ['data.json', undefined],
+    ['', undefined],
+  ])('resolveUiSchemaFileName(%s) === %s', (fileName, expected) => {
+    expect(resolveUiSchemaFileName(fileName)).toBe(expected);
   });
 });
 
