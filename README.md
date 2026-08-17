@@ -41,7 +41,11 @@ No additional setup required.
 
 ## Extension Settings
 
-This extension has no configurable settings at this time.
+| Setting | Type | Default | Description |
+| --- | --- | --- | --- |
+| `rjsf-preview.defaultTheme` | `"default"` \| `"fluent-light"` \| `"fluent-dark"` | `"default"` | Default UI theme for the form preview. `default` is the built-in RJSF theme; the others use Fluent UI (Light / Dark). |
+
+The theme can also be switched from the preview panel; this setting only controls which one is selected when a preview opens.
 
 ## Known Issues
 

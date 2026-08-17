@@ -41,7 +41,11 @@ npm run install:local   # .vsix をパッケージして VS Code にインスト
 
 ## 設定
 
-現時点では設定項目はありません。
+| 設定項目 | 型 | 既定値 | 説明 |
+| --- | --- | --- | --- |
+| `rjsf-preview.defaultTheme` | `"default"` \| `"fluent-light"` \| `"fluent-dark"` | `"default"` | フォームプレビューの既定 UI テーマ。`default` は RJSF 標準テーマ、それ以外は Fluent UI（ライト / ダーク）。 |
+
+テーマはプレビューパネル上でも切り替えられます。この設定はプレビューを開いたときに選択されるテーマを決めるものです。
 
 ## 既知の問題
 
