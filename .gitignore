@@ -2,4 +2,5 @@ node_modules/
 dist/
 out/
 *.vsix
+*.code-workspace
 CLAUDE.local.md
