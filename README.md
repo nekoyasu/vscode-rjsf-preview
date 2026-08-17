@@ -11,6 +11,24 @@ A VS Code extension that previews JSON Schema as an interactive React form using
 <!-- TODO: Add screenshot here -->
 <!-- ![screenshot](images/screenshot.png) -->
 
+## Installation
+
+This extension is not published to the Marketplace. Build a `.vsix` locally and install it — no debug run (F5) required.
+
+```bash
+npm install
+npm run install:local   # package the .vsix and install it into VS Code
+```
+
+Then reload the window (`Ctrl+Shift+P` → **Developer: Reload Window**).
+
+Notes:
+
+- `npm run package` only produces `rjsf-preview.vsix` without installing.
+- `npm run install:local` uses `--force`, so re-running it overwrites the same version. Use it after every code change, followed by a window reload.
+- With Remote-WSL, `code --install-extension` installs into the **WSL side**; the extension will not be active in windows opened on Windows-local folders. To install there too, use the Extensions view → **…** → **Install from VSIX…** with the same `rjsf-preview.vsix`.
+- To uninstall: `code --uninstall-extension local.rjsf-preview`
+
 ## Usage
 
 1. Open a JSON Schema file (filename must match `schema*.json` or `*schema.json`)

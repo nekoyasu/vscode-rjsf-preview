@@ -56,6 +56,8 @@
     "watch": "concurrently \"npm run watch:ext\" \"npm run watch:webview\"",
     "watch:ext": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --platform=node --format=cjs --watch",
     "watch:webview": "esbuild src/webview/index.tsx --bundle --outfile=dist/webview.js --platform=browser --format=iife --watch",
+    "package": "npx --yes @vscode/vsce package --baseContentUrl https://localhost --baseImagesUrl https://localhost --allow-missing-repository --out rjsf-preview.vsix",
+    "install:local": "npm run package && code --install-extension rjsf-preview.vsix --force",
     "test": "jest",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\""

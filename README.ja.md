@@ -11,6 +11,24 @@ JSON Schema をインタラクティブな React フォームとしてプレビ�
 <!-- TODO: スクリーンショットを追加 -->
 <!-- ![screenshot](images/screenshot.png) -->
 
+## インストール
+
+この拡張機能は Marketplace には公開していません。ローカルで `.vsix` をビルドしてインストールすれば、デバッグ実行（F5）なしで利用できます。
+
+```bash
+npm install
+npm run install:local   # .vsix をパッケージして VS Code にインストール
+```
+
+その後、ウィンドウを再読み込みします（`Ctrl+Shift+P` → **開発者: ウィンドウの再読み込み**）。
+
+補足:
+
+- `npm run package` は `rjsf-preview.vsix` の生成のみでインストールはしません。
+- `npm run install:local` は `--force` 付きのため、同一バージョンでも上書きされます。コードを変更したら実行し、ウィンドウを再読み込みしてください。
+- Remote-WSL の場合、`code --install-extension` は **WSL 側**にインストールされます。Windows ローカルのフォルダを開いたウィンドウでは有効になりません。そちらにも入れる場合は「拡張機能」ビュー右上の **…** → **VSIX からのインストール** で同じ `rjsf-preview.vsix` を指定してください。
+- アンインストール: `code --uninstall-extension local.rjsf-preview`
+
 ## 使い方
 
 1. JSON Schema ファイルを開く（ファイル名が `schema*.json` または `*schema.json` にマッチするもの）

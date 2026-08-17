@@ -4,4 +4,12 @@ src/**
 out/**
 .gitignore
 tsconfig.json
+tsconfig.test.json
 esbuild.mjs
+jest.config.js
+.prettierrc
+.prettierignore
+.claude/**
+.vscode/**
+*.code-workspace
+**/*.map
